@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ -z "$(docker images -q)" ]; then
+	echo " => No image found."
+	exit 0
+fi
+
+if [ -n "$(docker images -q --filter 'dangling=true')" ]; then
+	echo " => Removing untagged images..."
+	docker images -q --filter "dangling=true" | xargs docker rmi
+	echo " => Untagged images have been removed..."
+else
+	echo " => No untagged images found."
+fi

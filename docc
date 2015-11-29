@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ -z "$(docker ps -aq)" ]; then
+	echo " => No container found."
+	exit 0
+fi
+
+if [ -n "$(docker inspect --format '{{.Id }} {{.State.Running}}' $(docker ps -aq) | grep false | cut -d' ' -f1)" ]; then
+	echo " => Removing stopped containers..."
+	docker rm -f $(docker inspect --format '{{.Id }} {{.State.Running}}' $(docker ps -aq) | grep false | cut -d' ' -f1)
+	echo " => Stopped containers have been removed! [OK]"
+else
+	echo " => No stopped containers found."
+fi
